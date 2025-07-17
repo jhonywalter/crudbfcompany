@@ -1,7 +1,9 @@
 // Initialize Supabase client
 const SUPABASE_URL = 'https://xrweblfijwzrsoqdzqye.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhyd2VibGZpand6cnNvcWR6cXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MDk4NTMsImV4cCI6MjA2ODI4NTg1M30.lhm1uj1RM9xV8ihy-Ot0uN2te_JmIX6y6zOPPl5KXBg';
-const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const { createClient } = supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Get DOM elements
 const contentForm = document.getElementById('contentForm');
@@ -23,7 +25,7 @@ let editingId = null; // To keep track of the section being edited
 
 // Function to fetch and display content sections
 async function fetchContentSections() {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
         .from('content_sections')
         .select('*')
         .order('order_index', { ascending: true });
@@ -90,7 +92,7 @@ contentForm.addEventListener('submit', async (event) => {
 
     if (editingId) {
         // Update existing section
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('content_sections')
             .update(newSection)
             .eq('id', editingId);
@@ -104,7 +106,7 @@ contentForm.addEventListener('submit', async (event) => {
         }
     } else {
         // Add new section
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('content_sections')
             .insert([newSection]);
 
@@ -121,7 +123,7 @@ contentForm.addEventListener('submit', async (event) => {
 // Function to populate form for editing
 function editContentSection(section) {
     editingId = section.id;
-    sectionIdInput.value = section.id; // Store ID in hidden input for reference if needed
+    sectionIdInput.value = section.id;
     sectionNameInput.value = section.section_name;
     titleInput.value = section.title;
     subtitleInput.value = section.subtitle || '';
@@ -143,7 +145,7 @@ function resetForm() {
     sectionIdInput.value = '';
     submitButton.textContent = 'Add Section';
     cancelButton.style.display = 'none';
-    isActiveInput.checked = true; // Default to active
+    isActiveInput.checked = true;
 }
 
 // Cancel button functionality
@@ -152,7 +154,7 @@ cancelButton.addEventListener('click', resetForm);
 // Function to delete a content section
 async function deleteContentSection(id) {
     if (confirm('Are you sure you want to delete this content section?')) {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('content_sections')
             .delete()
             .eq('id', id);
@@ -161,7 +163,7 @@ async function deleteContentSection(id) {
             console.error('Error deleting content section:', error.message);
         } else {
             alert('Content section deleted successfully!');
-            fetchContentSections(); // Refresh the table
+            fetchContentSections();
         }
     }
 }
