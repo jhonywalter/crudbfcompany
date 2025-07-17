@@ -1,6 +1,6 @@
 // Initialize Supabase client
 const SUPABASE_URL = 'https://xrweblfijwzrsoqdzqye.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhyd2VibGZpand6cnNvcWR6cXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MDk4NTMsImV4cCI6MjA2ODI4NTg1M30.lhm1uj1RM9xV8ihy-Ot0uN2te_JmIX6y6zOPPl5KXBg'; // <-- reemplaza por la tuya
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhyd2VibGZpand6cnNvcWR6cXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MDk4NTMsImV4cCI6MjA2ODI4NTg1M30.lhm1uj1RM9xV8ihy-Ot0uN2te_JmIX6y6zOPPl5KXBg'; // <- reemplaza por tu clave real
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // DOM references
@@ -28,7 +28,7 @@ const contentTableBody = document.querySelector('#contentTable tbody');
 let editingId = null;
 
 // LOGIN HANDLING
-loginButton.addEventListener('click', async () => {
+loginButton?.addEventListener('click', async () => {
     const { data, error } = await supabaseClient.auth.signInWithPassword({
         email: loginEmail.value,
         password: loginPassword.value,
@@ -64,9 +64,8 @@ async function fetchContentSections() {
         return;
     }
 
-    if (!contentTableBody) return;
+    contentTableBody.innerHTML = '';
 
-    contentTableBody.innerHTML = ''; // Clear existing rows
     data.forEach(section => {
         const row = contentTableBody.insertRow();
         row.setAttribute('data-id', section.id);
@@ -109,7 +108,7 @@ async function fetchContentSections() {
 }
 
 // FORM SUBMIT
-contentForm.addEventListener('submit', async (event) => {
+contentForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const newSection = {
@@ -181,7 +180,7 @@ function resetForm() {
 }
 
 // CANCEL EDIT
-cancelButton.addEventListener('click', resetForm);
+cancelButton?.addEventListener('click', resetForm);
 
 // DELETE SECTION
 async function deleteContentSection(id) {
