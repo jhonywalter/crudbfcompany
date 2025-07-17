@@ -1,73 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Content Sections CRUD</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Content Manager</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="container">
-        <h1>Content Sections Management</h1>
-
-        <form id="contentForm">
-            <input type="hidden" id="sectionId">
-            <label for="section_name">Section Name:</label>
-            <input type="text" id="section_name" required>
-
-            <label for="title">Title:</label>
-            <input type="text" id="title" required>
-
-            <label for="subtitle">Subtitle:</label>
-            <input type="text" id="subtitle">
-
-            <label for="content">Content:</label>
-            <textarea id="content"></textarea>
-
-            <label for="image_url">Image URL:</label>
-            <input type="url" id="image_url">
-
-            <label for="button_text">Button Text:</label>
-            <input type="text" id="button_text">
-
-            <label for="button_url">Button URL:</label>
-            <input type="url" id="button_url">
-
-            <label for="order_index">Order Index:</label>
-            <input type="number" id="order_index" required>
-
-            <label for="is_active">Is Active:</label>
-            <input type="checkbox" id="is_active" checked>
-
-            <button type="submit" id="submitButton">Add Section</button>
-            <button type="button" id="cancelButton" style="display: none;">Cancel Edit</button>
-        </form>
-
-        <h2>Existing Content Sections</h2>
-        <div class="table-container">
-            <table id="contentTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Section Name</th>
-                        <th>Title</th>
-                        <th>Subtitle</th>
-                        <th>Content</th>
-                        <th>Image</th>
-                        <th>Button Text</th>
-                        <th>Button URL</th>
-                        <th>Order</th>
-                        <th>Active</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    </tbody>
-            </table>
-        </div>
+  <div class="container">
+    <div id="loginForm" class="card">
+      <h2>Login</h2>
+      <input type="email" id="loginEmail" placeholder="Email" required />
+      <input type="password" id="loginPassword" placeholder="Password" required />
+      <button id="loginButton">Login</button>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js"></script>
+    <div id="adminPanel" style="display: none;">
+      <h1>Admin Panel - Content Sections</h1>
+
+      <form id="contentForm" class="card">
+        <input type="hidden" id="sectionId" />
+        <input type="text" id="section_name" placeholder="Section Name" required />
+        <input type="text" id="title" placeholder="Title" required />
+        <input type="text" id="subtitle" placeholder="Subtitle" />
+        <textarea id="content" placeholder="Content"></textarea>
+        <input type="url" id="image_url" placeholder="Image URL" />
+        <input type="text" id="button_text" placeholder="Button Text" />
+        <input type="url" id="button_url" placeholder="Button URL" />
+        <input type="number" id="order_index" placeholder="Order Index" required />
+        <label><input type="checkbox" id="is_active" checked /> Active</label>
+
+        <button type="submit" id="submitButton">Add Section</button>
+        <button type="button" id="cancelButton" style="display: none;">Cancel</button>
+      </form>
+
+      <div id="contentCards" class="cards"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
 </body>
 </html>
