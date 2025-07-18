@@ -1,37 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Content Manager</title>
+  <title>Gestor de Contenido</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <div id="loginForm" class="card">
-      <h2>Login</h2>
+      <h2>Iniciar Sesión</h2>
       <input type="email" id="loginEmail" placeholder="Email" required />
-      <input type="password" id="loginPassword" placeholder="Password" required />
-      <button id="loginButton">Login</button>
+      <input type="password" id="loginPassword" placeholder="Contraseña" required />
+      <button id="loginButton">Ingresar</button>
     </div>
 
     <div id="adminPanel" style="display: none;">
-      <h1>Admin Panel - Content Sections</h1>
+      <h1>Panel de Administración - Secciones de Contenido</h1>
 
       <form id="contentForm" class="card">
         <input type="hidden" id="sectionId" />
-        <input type="text" id="section_name" placeholder="Section Name" required />
-        <input type="text" id="title" placeholder="Title" required />
-        <input type="text" id="subtitle" placeholder="Subtitle" />
-        <textarea id="content" placeholder="Content"></textarea>
-        <input type="url" id="image_url" placeholder="Image URL" />
-        <input type="text" id="button_text" placeholder="Button Text" />
-        <input type="url" id="button_url" placeholder="Button URL" />
-        <input type="number" id="order_index" placeholder="Order Index" required />
-        <label><input type="checkbox" id="is_active" checked /> Active</label>
+        <input type="text" id="section_name" placeholder="Nombre de la Sección" required />
+        <input type="text" id="title" placeholder="Título" required />
+        <input type="text" id="subtitle" placeholder="Subtítulo" />
+        <textarea id="content" placeholder="Contenido"></textarea>
+        <input type="url" id="image_url" placeholder="URL de la Imagen" />
+        <input type="text" id="button_text" placeholder="Texto del Botón" />
+        <input type="url" id="button_url" placeholder="URL del Botón" />
+        <input type="number" id="order_index" placeholder="Índice de Orden" required />
+        <label><input type="checkbox" id="is_active" checked /> Activo</label>
 
-        <button type="submit" id="submitButton">Add Section</button>
-        <button type="button" id="cancelButton" style="display: none;">Cancel</button>
+        <button type="submit" id="submitButton">Agregar Sección</button>
+        <button type="button" id="cancelButton" style="display: none;">Cancelar</button>
       </form>
 
       <div id="contentCards" class="cards"></div>

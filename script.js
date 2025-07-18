@@ -23,7 +23,7 @@ const orderIndexInput = document.getElementById('order_index');
 const isActiveInput = document.getElementById('is_active');
 const submitButton = document.getElementById('submitButton');
 const cancelButton = document.getElementById('cancelButton');
-const contentCardsContainer = document.getElementById('contentCards'); // <- Referencia correcta al contenedor de tarjetas
+const contentCardsContainer = document.getElementById('contentCards');
 
 let editingId = null;
 
@@ -60,26 +60,25 @@ async function fetchContentSections() {
         .order('order_index', { ascending: true });
 
     if (error) {
-        console.error('Error fetching content sections:', error.message);
+        console.error('Error al obtener las secciones de contenido:', error.message);
         return;
     }
 
-    contentCardsContainer.innerHTML = ''; // Limpiar el contenedor antes de añadir nuevas tarjetas
+    contentCardsContainer.innerHTML = '';
 
     data.forEach(section => {
         const card = document.createElement('div');
         card.classList.add('content-card');
         card.setAttribute('data-id', section.id);
 
-        // Construir el HTML interno de la tarjeta
         card.innerHTML = `
             ${section.image_url ? `<img src="${section.image_url}" alt="${section.title}">` : ''}
             <div class="title">${section.title}</div>
             <div class="subtitle">${section.subtitle || ''}</div>
             <div class="content">${section.content || ''}</div>
             <div class="info">
-                <strong>Section Name:</strong> ${section.section_name}<br>
-                <strong>Order:</strong> ${section.order_index} | <strong>Active:</strong> ${section.is_active ? 'Yes' : 'No'}
+                <strong>Nombre de la Sección:</strong> ${section.section_name}<br>
+                <strong>Orden:</strong> ${section.order_index} | <strong>Activo:</strong> ${section.is_active ? 'Sí' : 'No'}
             </div>
             <div class="actions">
                 <button class="edit-btn">Editar</button>
@@ -87,10 +86,9 @@ async function fetchContentSections() {
             </div>
         `;
 
-        // Añadir listeners a los botones de la tarjeta
         card.querySelector('.edit-btn').addEventListener('click', () => {
             editContentSection(section);
-            window.scrollTo({ top: 0, behavior: 'smooth' }); // Desplazar al formulario
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
         
         card.querySelector('.delete-btn').addEventListener('click', () => deleteContentSection(section.id));
@@ -117,14 +115,12 @@ contentForm?.addEventListener('submit', async (event) => {
 
     let error;
     if (editingId) {
-        // Update
         const { error: updateError } = await supabaseClient
             .from('content_sections')
             .update(sectionData)
             .eq('id', editingId);
         error = updateError;
     } else {
-        // Insert
         const { error: insertError } = await supabaseClient
             .from('content_sections')
             .insert([sectionData]);
@@ -132,7 +128,7 @@ contentForm?.addEventListener('submit', async (event) => {
     }
 
     if (error) {
-        console.error('Error saving section:', error.message);
+        console.error('Error al guardar la sección:', error.message);
         alert('Error al guardar la sección: ' + error.message);
     } else {
         alert(`Sección ${editingId ? 'actualizada' : 'agregada'} con éxito`);
@@ -181,7 +177,7 @@ async function deleteContentSection(id) {
             .eq('id', id);
 
         if (error) {
-            console.error('Error deleting section:', error.message);
+            console.error('Error al eliminar la sección:', error.message);
             alert('Error al eliminar la sección: ' + error.message);
         } else {
             alert('Sección eliminada con éxito');
