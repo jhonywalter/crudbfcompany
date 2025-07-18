@@ -1,6 +1,6 @@
 // Initialize Supabase client
 const SUPABASE_URL = 'https://xrweblfijwzrsoqdzqye.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhyd2VibGZpand6cnNvcWR6cXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MDk4NTMsImV4cCI6MjA2ODI4NTg1M30.lhm1uj1RM9xV8ihy-Ot0uN2te_JmIX6y6zOPPl5KXBg'; // <- reemplaza por tu clave real
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhyd2VibGZpand6cnNvcWR6cXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3MDk4NTMsImV4cCI6MjA2ODI4NTg1M30.lhm1uj1RM9xV8ihy-Ot0uN2te_JmIX6y6zOPPl5KXBg';
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // DOM references
@@ -23,7 +23,7 @@ const orderIndexInput = document.getElementById('order_index');
 const isActiveInput = document.getElementById('is_active');
 const submitButton = document.getElementById('submitButton');
 const cancelButton = document.getElementById('cancelButton');
-const contentTableBody = document.querySelector('#contentTable tbody');
+const contentCardsContainer = document.getElementById('contentCards'); // <- Referencia correcta al contenedor de tarjetas
 
 let editingId = null;
 
@@ -52,7 +52,7 @@ supabaseClient.auth.getSession().then(({ data: { session } }) => {
     }
 });
 
-// FETCH CONTENT SECTIONS
+// FETCH AND DISPLAY CONTENT SECTIONS AS CARDS
 async function fetchContentSections() {
     const { data, error } = await supabaseClient
         .from('content_sections')
@@ -64,46 +64,38 @@ async function fetchContentSections() {
         return;
     }
 
-    contentTableBody.innerHTML = '';
+    contentCardsContainer.innerHTML = ''; // Limpiar el contenedor antes de añadir nuevas tarjetas
 
     data.forEach(section => {
-        const row = contentTableBody.insertRow();
-        row.setAttribute('data-id', section.id);
+        const card = document.createElement('div');
+        card.classList.add('content-card');
+        card.setAttribute('data-id', section.id);
 
-        row.insertCell().textContent = section.id;
-        row.insertCell().textContent = section.section_name;
-        row.insertCell().textContent = section.title;
-        row.insertCell().textContent = section.subtitle || '';
-        row.insertCell().textContent = section.content || '';
+        // Construir el HTML interno de la tarjeta
+        card.innerHTML = `
+            ${section.image_url ? `<img src="${section.image_url}" alt="${section.title}">` : ''}
+            <div class="title">${section.title}</div>
+            <div class="subtitle">${section.subtitle || ''}</div>
+            <div class="content">${section.content || ''}</div>
+            <div class="info">
+                <strong>Section Name:</strong> ${section.section_name}<br>
+                <strong>Order:</strong> ${section.order_index} | <strong>Active:</strong> ${section.is_active ? 'Yes' : 'No'}
+            </div>
+            <div class="actions">
+                <button class="edit-btn">Editar</button>
+                <button class="delete-btn">Eliminar</button>
+            </div>
+        `;
 
-        const imgCell = row.insertCell();
-        if (section.image_url) {
-            const img = document.createElement('img');
-            img.src = section.image_url;
-            img.alt = section.title;
-            img.style.maxWidth = '100px';
-            imgCell.appendChild(img);
-        } else {
-            imgCell.textContent = '';
-        }
+        // Añadir listeners a los botones de la tarjeta
+        card.querySelector('.edit-btn').addEventListener('click', () => {
+            editContentSection(section);
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Desplazar al formulario
+        });
+        
+        card.querySelector('.delete-btn').addEventListener('click', () => deleteContentSection(section.id));
 
-        row.insertCell().textContent = section.button_text || '';
-        row.insertCell().textContent = section.button_url || '';
-        row.insertCell().textContent = section.order_index;
-        row.insertCell().textContent = section.is_active ? 'Sí' : 'No';
-
-        const actionsCell = row.insertCell();
-        const editButton = document.createElement('button');
-        editButton.textContent = 'Editar';
-        editButton.classList.add('edit');
-        editButton.addEventListener('click', () => editContentSection(section));
-        actionsCell.appendChild(editButton);
-
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Eliminar';
-        deleteButton.classList.add('delete');
-        deleteButton.addEventListener('click', () => deleteContentSection(section.id));
-        actionsCell.appendChild(deleteButton);
+        contentCardsContainer.appendChild(card);
     });
 }
 
@@ -111,7 +103,7 @@ async function fetchContentSections() {
 contentForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const newSection = {
+    const sectionData = {
         section_name: sectionNameInput.value,
         title: titleInput.value,
         subtitle: subtitleInput.value,
@@ -123,35 +115,33 @@ contentForm?.addEventListener('submit', async (event) => {
         is_active: isActiveInput.checked,
     };
 
+    let error;
     if (editingId) {
-        const { error } = await supabaseClient
+        // Update
+        const { error: updateError } = await supabaseClient
             .from('content_sections')
-            .update(newSection)
+            .update(sectionData)
             .eq('id', editingId);
-
-        if (error) {
-            console.error('Error updating section:', error.message);
-        } else {
-            alert('Sección actualizada con éxito');
-            resetForm();
-            fetchContentSections();
-        }
+        error = updateError;
     } else {
-        const { error } = await supabaseClient
+        // Insert
+        const { error: insertError } = await supabaseClient
             .from('content_sections')
-            .insert([newSection]);
+            .insert([sectionData]);
+        error = insertError;
+    }
 
-        if (error) {
-            console.error('Error adding section:', error.message);
-        } else {
-            alert('Sección agregada con éxito');
-            contentForm.reset();
-            fetchContentSections();
-        }
+    if (error) {
+        console.error('Error saving section:', error.message);
+        alert('Error al guardar la sección: ' + error.message);
+    } else {
+        alert(`Sección ${editingId ? 'actualizada' : 'agregada'} con éxito`);
+        resetForm();
+        fetchContentSections();
     }
 });
 
-// EDIT SECTION
+// EDIT SECTION: Populate form with section data
 function editContentSection(section) {
     editingId = section.id;
     sectionIdInput.value = section.id;
@@ -184,7 +174,7 @@ cancelButton?.addEventListener('click', resetForm);
 
 // DELETE SECTION
 async function deleteContentSection(id) {
-    if (confirm('¿Seguro que deseas eliminar esta sección?')) {
+    if (confirm('¿Seguro que deseas eliminar esta sección? Esta acción no se puede deshacer.')) {
         const { error } = await supabaseClient
             .from('content_sections')
             .delete()
@@ -192,8 +182,9 @@ async function deleteContentSection(id) {
 
         if (error) {
             console.error('Error deleting section:', error.message);
+            alert('Error al eliminar la sección: ' + error.message);
         } else {
-            alert('Sección eliminada');
+            alert('Sección eliminada con éxito');
             fetchContentSections();
         }
     }

@@ -3,6 +3,7 @@ body {
   margin: 0;
   padding: 0;
   background: #f9f9f9;
+  color: #333;
 }
 
 .container {
@@ -16,16 +17,17 @@ body {
   padding: 20px;
   border-radius: 12px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 input, textarea, button {
   width: 100%;
   margin-top: 10px;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-sizing: border-box;
+  font-size: 16px;
 }
 
 button {
@@ -34,10 +36,18 @@ button {
   font-weight: bold;
   cursor: pointer;
   border: none;
+  transition: background-color 0.2s ease;
 }
 
 button:hover {
   background-color: #0056b3;
+}
+
+#cancelButton {
+  background-color: #6c757d;
+}
+#cancelButton:hover {
+  background-color: #5a6268;
 }
 
 .cards {
@@ -49,35 +59,67 @@ button:hover {
 .content-card {
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 20px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between; /* Empuja los botones hacia abajo */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.content-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .content-card img {
   max-width: 100%;
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  background-color: #f0f0f0; /* Color de fondo mientras carga la imagen */
 }
 
 .content-card .title {
-  font-size: 18px;
+  font-size: 1.25rem;
   font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .content-card .subtitle {
   color: #666;
-  font-size: 14px;
-  margin-bottom: 10px;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.content-card .content {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 15px;
 }
 
 .actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  gap: 10px;
+  margin-top: auto; /* Se asegura que se alinee al fondo */
 }
 
 .actions button {
   width: 48%;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.edit-btn {
+    background-color: #17a2b8;
+}
+.edit-btn:hover {
+    background-color: #117a8b;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+}
+.delete-btn:hover {
+    background-color: #c82333;
 }
