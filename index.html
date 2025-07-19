@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gestor de Contenido</title>
+  <title>Administrador de Contenido - BF COMPANY</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -16,15 +16,15 @@
     </div>
 
     <div id="adminPanel" style="display: none;">
-      <h1>Panel de Administración - Secciones de Contenido</h1>
+      <h1>Panel de Administración - Seccion de Contenido</h1>
 
       <form id="contentForm" class="card">
         <input type="hidden" id="sectionId" />
         <input type="text" id="section_name" placeholder="Nombre de la Sección" required />
-        <input type="text" id="title" placeholder="Título" required />
-        <input type="text" id="subtitle" placeholder="Subtítulo" />
-        <textarea id="content" placeholder="Contenido"></textarea>
         <input type="url" id="image_url" placeholder="URL de la Imagen" />
+        <input type="text" id="title" placeholder="Título" required />
+        <textarea type="text" id="subtitle" placeholder="Subtítulo"></textarea>
+        <textarea id="content" placeholder="Contenido"></textarea>        
         <input type="text" id="button_text" placeholder="Texto del Botón" />
         <input type="url" id="button_url" placeholder="URL del Botón" />
         <input type="number" id="order_index" placeholder="Índice de Orden" required />
